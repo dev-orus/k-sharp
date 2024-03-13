@@ -159,6 +159,10 @@ def transpile_code(code: str, indent=0) -> str:
             pyCode+=f'{token.value[2]}: Ptr[{token.value[0]}] = Ptr({token.value[0]}())'
         elif token.type == PTR_DIDENTIFIER_CALL:
             pyCode+=f'{token.value[2]}: Ptr[{token.value[0]}] = Ptr({token.value[0]}{transpile_round(token.value[3])})'
+        elif token.type == CLASS_DECL:
+            pyCode+=f'class {token.value[0]}:\n{(' ' * (indent+2))}{transpile_code(str(token.value[1]).removeprefix('{').removesuffix('}'), indent+1)}'
+        elif token.type == DECORATOR:
+            pyCode+='@'+token.value[0]
         else:
             print(token.type, token.value)
     pyCode += 'if __name__ == "__main__":main()' if indent==0 else (' ' * (indent+1))

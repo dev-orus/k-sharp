@@ -6,6 +6,7 @@ NUMBER = 'NUMBER'
 FUNC_DECL = 'FUNC_DECL'
 PTR_FUNC_DECL = 'PTR_FUNC_DECL'
 VAR_DECL = 'VAR_DECL'
+CLASS_DECL = 'CLASS_DECL'
 PTR_VAR_DECL = 'PTR_VAR_DECL'
 VAR_SET = 'VAR_SET'
 FUNC_CALL = 'FUNC_CALL'
@@ -26,6 +27,7 @@ PTR_SCOPE = 'PTR_SCOPE'
 DIDENTIFIER_CALL = 'DIDENTIFIER_CALL'
 PTR_DIDENTIFIER = 'PTR_DIDENTIFIER'
 PTR_DIDENTIFIER_CALL = 'PTR_DIDENTIFIER_CALL'
+DECORATOR = 'DECORATOR'
 
 SYNTAX = {
     r'^\n': NEWLINE,
@@ -34,10 +36,12 @@ SYNTAX = {
     r'^\-\>': PTR_SCOPE,
     r'^#\s*include\s*(<(?:[^<>]|(?R))*>)': INCLUDE,
     r'^return|yield|raise': KEYWORD,
+    r'^class\s+([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*(\{(?:[^{}]|\{[^{}]*\})*\})': CLASS_DECL,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*(\((?:[^()]|\([^()]*\))*\))\s*(\{(?:[^{}]|\{[^{}]*\})*\})': FUNC_DECL,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*(\((?:[^()]|\([^()]*\))*\))': FUNC_CALL,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)(\*\s+|\s+\*)([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*(\((?:[^()]|\([^()]*\))*\))\s*(\{(?:[^{}]|\{[^{}]*\})*\})': PTR_FUNC_DECL,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*=\s*': VAR_SET,
+    r'^@([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)': DECORATOR,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*=\s*': VAR_DECL,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)(\*\s+|\s+\*)([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*=\s*': PTR_VAR_DECL,
     r'^struct\s+([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*(\{(?:[^{}]|\{[^{}]*\})*\})': STRUCT_DECL,

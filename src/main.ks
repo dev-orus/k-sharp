@@ -1,13 +1,15 @@
 #include <stdio.h>
 
-struct Point {
-    int x;
+class Test {
+    int x = 10;
+    int y = 190;
+    int __init__(this) {
+        this.x = 0x1903;
+    }
 }
 
 int main() {
-    Point *mytest(10);
-    mytest->x
-    {'x': mytest->x}
-    printf("{0}", mytest->x);
-    return 0;
+    int* ptr = 10;
+    Test mytest;
+    printf("{0}, {1}", mytest.x, mytest.y);
 }
