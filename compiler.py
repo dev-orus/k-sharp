@@ -237,5 +237,5 @@ def transpile_code(code: str, indent=0) -> str:
                 pyCode+=f'{token.value[0]} {transpile_round(token.value[1])}:\n{(' ' * (indent+2))}{transpile_code(str(token.value[2]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
         else:
             print(token.type, token.value)
-    pyCode += 'if __name__ == "__main__":main()' if indent==0 else (' ' * (indent+1))
+    pyCode += 'if __name__ == "__main__":quit(main())' if indent==0 else (' ' * (indent+1))
     return pyCode
