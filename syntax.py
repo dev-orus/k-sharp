@@ -28,6 +28,7 @@ DIDENTIFIER_CALL = 'DIDENTIFIER_CALL'
 PTR_DIDENTIFIER = 'PTR_DIDENTIFIER'
 PTR_DIDENTIFIER_CALL = 'PTR_DIDENTIFIER_CALL'
 DECORATOR = 'DECORATOR'
+SCOPE_KEYWORD = 'SCOPE_KEYWORD'
 
 SYNTAX = {
     r'^\n': NEWLINE,
@@ -36,6 +37,8 @@ SYNTAX = {
     r'^\-\>': PTR_SCOPE,
     r'^#\s*include\s*(<(?:[^<>]|(?R))*>)': INCLUDE,
     r'^return|yield|raise': KEYWORD,
+    r'^(if|elif|except)\s*(\((?:[^()]|\([^()]*\))*\))\s*(\{(?:[^{}]|\{[^{}]*\})*\})': SCOPE_KEYWORD,
+    r'^(try|else|)\s*(\{(?:[^{}]|\{[^{}]*\})*\})': SCOPE_KEYWORD,
     r'^class\s+([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*(\{(?:[^{}]|\{[^{}]*\})*\})': CLASS_DECL,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*(\((?:[^()]|\([^()]*\))*\))\s*(\{(?:[^{}]|\{[^{}]*\})*\})': FUNC_DECL,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.]|::)*)\s*(\((?:[^()]|\([^()]*\))*\))': FUNC_CALL,

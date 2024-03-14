@@ -230,6 +230,11 @@ def transpile_code(code: str, indent=0) -> str:
             pyCode+='@'+token.value[0]
         elif token.type == SQUARE_BRACKETS:
             pyCode+=transpile_square(token.value)
+        elif token.type == SCOPE_KEYWORD:
+            if token.value[0] in ('try', 'else'):
+                pyCode+=f'{token.value[0]}:\n{(' ' * (indent+2))}{transpile_code(str(token.value[1]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
+            else:
+                pyCode+=f'{token.value[0]} {transpile_round(token.value[1])}:\n{(' ' * (indent+2))}{transpile_code(str(token.value[2]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
         else:
             print(token.type, token.value)
     pyCode += 'if __name__ == "__main__":main()' if indent==0 else (' ' * (indent+1))
