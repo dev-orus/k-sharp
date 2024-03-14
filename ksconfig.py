@@ -1,2 +1,0 @@
-comments = False
-compact = True

@@ -6,9 +6,11 @@
 
 <h3 align="center">K# is a programing language that has similar syntax to c and transpiles to python</h3>
 
-## How to use
+## Using it
 
-`python3 ksharp.py <file.ks>`
+`ksharp init`
+`ksharp install`
+`ksharp build`
 
 ## OOP
 
