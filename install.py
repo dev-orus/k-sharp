@@ -1,5 +1,6 @@
 import os
 
+# Windows not supported (yet)
 if os.name == 'nt':...
 else:
     d = os.path.dirname(__file__)
@@ -13,7 +14,7 @@ else:
 {os.path.join(d, 'env', 'bin', 'python3')} {os.path.join(d, 'ksharp.py')} $1""")
     with open(os.path.join(d, 'bin', 'ksharp-lsp'), 'w')as f:
         f.write(f"""#!sh
-{os.path.join(d, 'env', 'bin', 'python3')} {os.path.join(d, 'lsp.py')} $1""")
+"$1/bin/python3" {os.path.join(d, 'lsp.py')}""")
     os.system('chmod +x '+os.path.join(d, 'bin', 'ksharp'))
     os.system('chmod +x '+os.path.join(d, 'bin', 'ksharp-lsp'))
     print(f'now on your bashrc, zshrc, etc: add this:\nexport PATH="{os.path.join(d, 'bin')}:$PATH"')

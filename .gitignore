@@ -2,3 +2,5 @@ env
 __pycache__
 .DS_STORE
 bin
+err.log
+lsp.log
