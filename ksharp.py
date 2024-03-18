@@ -66,7 +66,7 @@ def scanf(toOut: Ptr):
   toOut.value = input()""")
         if name == 'nt':...
         else:
-            system(f'.env/bin/pip install mypy')
+            system(f'.env/bin/pip install mypy jedi regex')
             for m in conf['modules']:
                 system(f'.env/bin/pip install {m}')
     elif argv[1] == 'init':
