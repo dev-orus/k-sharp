@@ -11,10 +11,10 @@
 - `python3 install.py`
 
 ## Using it
-
-`ksharp init`
-`ksharp install`
-`ksharp build`
+- Initialize a Project: `ksharp init`
+- Install pip requirements in the ksconfig file and env: `ksharp install`
+- Build project (Transpile to Python): `ksharp build`
+- Build project and run it: `ksharp run`
 
 ## OOP
 
