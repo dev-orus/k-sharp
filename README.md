@@ -8,7 +8,7 @@
 
 ## Install
 - Make sure you have python3.11 or newer
-- `git clone `
+- `git clone https://github.com/dev-orus/k-sharp.git`
 - `cd k-sharp`
 - `python3 install.py`
 
