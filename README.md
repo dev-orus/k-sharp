@@ -8,6 +8,8 @@
 
 ## Install
 - Make sure you have python3.11 or newer
+- `git clone `
+- `cd k-sharp`
 - `python3 install.py`
 
 ## Using it
