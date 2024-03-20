@@ -52,18 +52,19 @@ if __name__ == "__main__":
         p = '.env/lib/'+listdir('.env/lib')[0]+'/site-packages/stdio'
         if not path.exists(p):
             mkdir(p)
-            with open(path.join(p, '__init__.py'), 'w')as f:f.write('')
-            with open(path.join(p, 'h.py'), 'w')as f:f.write("""from builtins import open as fopen
-from typing import Generic, TypeVar, List, Any as any
-T = TypeVar("T")
+            with open(path.join(p, '__init__.py'), 'w')as f:f.write("""import stdlib
 
-class Ptr(Generic[T]):
-    def __init__(self, value: T):self.value = value
-    
 def printf(STRING: str, *values, end="\\n", flush=False):
   print(STRING.format(*values), end=end, flush=flush)
-def scanf(toOut: Ptr):
+def scanf(toOut: stdlib.Ptr):
   toOut.value = input()""")
+            p = '.env/lib/'+listdir('.env/lib')[0]+'/site-packages/stdlib'
+            if not path.exists(p):
+                mkdir(p)
+            with open(path.join(p, '__init__.py'), 'w')as f:f.write("""from typing import Generic, TypeVar, List, Any as any
+T = TypeVar("T")
+class Ptr(Generic[T]):
+  def __init__(self, value: T):self.value = value""")
         if name == 'nt':...
         else:
             system(f'.env/bin/pip install mypy jedi regex')

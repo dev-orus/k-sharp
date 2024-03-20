@@ -22,6 +22,7 @@ COMMENT = 'COMMENT'
 OPERATOR = 'OPERATOR'
 DIDENTIFIER = 'DIDENTIFIER'
 INCLUDE = 'INCLUDE'
+INCLUDE_LOCAL = 'INCLUDE_LOCAL'
 STRUCT_DECL = 'STRUCT_DECL'
 PTR_SCOPE = 'PTR_SCOPE'
 DIDENTIFIER_CALL = 'DIDENTIFIER_CALL'
@@ -29,13 +30,16 @@ PTR_DIDENTIFIER = 'PTR_DIDENTIFIER'
 PTR_DIDENTIFIER_CALL = 'PTR_DIDENTIFIER_CALL'
 DECORATOR = 'DECORATOR'
 SCOPE_KEYWORD = 'SCOPE_KEYWORD'
+DELETE = 'DELETE'
 
 SYNTAX = {
     r'^\n': NEWLINE,
     r'^\;': SEMICOLON,
     r'^\s': WHITESPACE,
     r'^\-\>': PTR_SCOPE,
+    r'^# *del *([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*)': DELETE,
     r'^# *include *(<(?:[^<>]|(?R))*>)': INCLUDE,
+    r'^# *include *("(?:[^""]|(?R))*")': INCLUDE_LOCAL,
     r'^return|yield|raise': KEYWORD,
     r'^(if|elif|except|for) *(\((?:[^()]|\([^()]*\))*\)) *(\{(?:[^{}]|\{[^{}]*\})*\})': SCOPE_KEYWORD,
     r'^(try|else|) *(\{(?:[^{}]|\{[^{}]*\})*\})': SCOPE_KEYWORD,
@@ -62,7 +66,7 @@ SYNTAX = {
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*) +([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*)': DIDENTIFIER,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*)\*': PTR_IDENTIFIER,
     r'^[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*': IDENTIFIER,
-    r'\&\&|\|\|': IDENTIFIER,
+    r'\&\&|\|\||\!': IDENTIFIER,
     r'\-\-|\+\+|\<|\>|\=|\/|\*|\+|\%|\-': OPERATOR,
 }
 
@@ -80,7 +84,7 @@ SYNTAX2 = {
     r'^\[[^\]]*\]': SQUARE_BRACKETS,
     r'^\"(?:[^""]|(?R))*\"': STRING,
     r"^\'(?:[^'']|(?R))*\'": STRING,
-    r'\&\&|\|\|': IDENTIFIER,
+    r'\&\&|\|\||\!': IDENTIFIER,
     r'\-\-|\+\+|\<|\>|\=|\/|\*|\+|\%|\-': OPERATOR,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*) +([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*)': DIDENTIFIER,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*)\*': PTR_IDENTIFIER,
@@ -101,7 +105,7 @@ SYNTAX3 = {
     r'^\[[^\]]*\]': SQUARE_BRACKETS,
     r'^\"(?:[^""]|(?R))*\"': STRING,
     r"^\'(?:[^'']|(?R))*\'": STRING,
-    r'\&\&|\|\|': IDENTIFIER,
+    r'\&\&|\|\||\!': IDENTIFIER,
     r'\-\-|\+\+|\<|\>|\=|\/|\*|\+|\%|\-': OPERATOR,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*)\*': PTR_IDENTIFIER,
     r'^[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*': IDENTIFIER,
@@ -123,7 +127,7 @@ SYNTAX4 = {
     r"^\'(?:[^'']|(?R))*\'": STRING,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*)\*': PTR_IDENTIFIER,
     r'^[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*': IDENTIFIER,
-    r'\&\&|\|\|': IDENTIFIER,
+    r'\&\&|\|\||\!': IDENTIFIER,
     r'\-\-|\+\+|\<|\>|\=|\/|\*|\+|\%|\-': OPERATOR,
 }
 
@@ -140,7 +144,7 @@ SYNTAX5 = {
     r'^\[[^\]]*\]': SQUARE_BRACKETS,
     r'^\"(?:[^""]|(?R))*\"': STRING,
     r"^\'(?:[^'']|(?R))*\'": STRING,
-    r'\&\&|\|\|': IDENTIFIER,
+    r'\&\&|\|\||\!': IDENTIFIER,
     r'\-\-|\+\+|\<|\>|\=|\/|\*|\+|\%|\-': OPERATOR,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*)\*': PTR_IDENTIFIER,
     r'^[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*': IDENTIFIER,

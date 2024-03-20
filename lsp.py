@@ -1,6 +1,6 @@
 import os
 from json import dumps, loads
-from completion import getCompletion, getDefinition
+from lsp_lib_ksharp import getCompletion, getDefinition
 import sys
 import traceback
 

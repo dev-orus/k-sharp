@@ -212,12 +212,14 @@ def transpile_struct(code: str, indent=1):
             pyCode+=f'{token.value[1]}: {token.value[0]}'
         elif token.type == SQUARE_BRACKETS:
             pyCode+=transpile_square(token.value)
+        elif token.type == STRING:
+            pyCode+=token.value
     return pyCode
 
 def transpile_code(code: str, indent=0) -> str:
     if code.strip() == '' and indent>0:return (' ' * (indent+1))+'...'
     TOKENS = tokenize(code, SYNTAX)
-    pyCode = 'from dataclasses import dataclass\nfrom typing import Generic, TypeVar, List, Any as any\nT = TypeVar("T")\nclass Ptr(Generic[T]):\n  def __init__(self, value: T):self.value = value\n' if indent==0 else '\n' + (' ' * (indent+1))
+    pyCode = 'from dataclasses import dataclass\nfrom typing import Generic, TypeVar, List, Any as any\nT = TypeVar("T")\n' if indent==0 else '\n' + (' ' * (indent+1))
     ignore_fline = False
     if indent:
         ignore_fline = True
@@ -300,5 +302,5 @@ def transpile_code(code: str, indent=0) -> str:
                 pyCode+=f'{token.value[0]} {transpile_round2(token.value[1]).removeprefix('(').removesuffix(')')}:{transpile_code(str(token.value[2]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
         else:
             print(token.type, token.value)
-    pyCode += '\nif __name__ == "__main__":quit(main())\n# mypy: disable-error-code = import-untyped' if indent==0 else (' ' * (indent+1))
+    pyCode += '\nif __name__ == "__main__":\n  try:exec("quit(main())")\n  except NameError:pass\n# mypy: disable-error-code = import-untyped' if indent==0 else (' ' * (indent+1))
     return pyCode

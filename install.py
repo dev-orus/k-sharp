@@ -18,3 +18,20 @@ else:
     os.system('chmod +x '+os.path.join(d, 'bin', 'ksharp'))
     os.system('chmod +x '+os.path.join(d, 'bin', 'ksharp-lsp'))
     print(f'now on your bashrc, zshrc, etc: add this:\nexport PATH="{os.path.join(d, 'bin')}:$PATH"')
+
+p = 'env/lib/'+os.listdir('env/lib')[0]+'/site-packages/stdio'
+if not os.path.exists(p):
+    os.mkdir(p)
+    with open(os.path.join(p, '__init__.py'), 'w')as f:f.write("""import stdlib
+
+def printf(STRING: str, *values, end="\\n", flush=False):
+  print(STRING.format(*values), end=end, flush=flush)
+def scanf(toOut: stdlib.Ptr):
+  toOut.value = input()""")
+p = 'env/lib/'+os.listdir('env/lib')[0]+'/site-packages/stdlib'
+if not os.path.exists(p):
+    os.mkdir(p)
+with open(os.path.join(p, '__init__.py'), 'w')as f:f.write("""from typing import Generic, TypeVar, List, Any as any
+T = TypeVar("T")
+class Ptr(Generic[T]):
+  def __init__(self, value: T):self.value = value""")
