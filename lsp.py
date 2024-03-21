@@ -30,4 +30,3 @@ while True:
     except Exception as e:
         with open(os.path.join(parent, 'err.log'), 'w') as f:
             f.write(str('\n'.join(traceback.format_exception(type(e), e, e.__traceback__))))
-

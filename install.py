@@ -6,7 +6,7 @@ if os.name == 'nt':...
 else:
     d = os.path.dirname(__file__)
     if not os.path.exists(os.path.join(d, 'env')):
-        os.system(f'python3.12 -m venv {os.path.join(d, 'env')}')
+        os.system(f'python3 -m venv {os.path.join(d, 'env')}')
         os.system(f'{os.path.join(d, 'env', 'bin', 'pip')} install regex jedi')
     if not os.path.exists(os.path.join(d, 'bin')):
         os.mkdir(os.path.join(d, 'bin'))

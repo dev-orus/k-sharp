@@ -300,7 +300,10 @@ def transpile_code(code: str, indent=0) -> str:
                 pyCode+=f'{token.value[0]}:{transpile_code(str(token.value[1]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
             else:
                 pyCode+=f'{token.value[0]} {transpile_round2(token.value[1]).removeprefix('(').removesuffix(')')}:{transpile_code(str(token.value[2]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
+        elif token.type == STRING:
+            pyCode+=token.value
         else:
-            print(token.type, token.value)
+            # In case there is a token that isn't handled (Please send feedback if so)
+            print('Problem: There is a unhandled token ->', token.type, token.value)
     pyCode += '\nif __name__ == "__main__":\n  try:exec("quit(main())")\n  except NameError:pass\n# mypy: disable-error-code = import-untyped' if indent==0 else (' ' * (indent+1))
     return pyCode

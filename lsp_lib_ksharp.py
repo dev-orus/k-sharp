@@ -76,7 +76,8 @@ def insert_string_after_char(original_string, insert_string, char, x):
 
 def getDefinition(code: str, line: int, colnum: int, file: str):
     index = sum(len(line) + 1 for line in code.split('\n')[:line-1]) + colnum - 1
-    res = re.search(r'^[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*', code[index:]).group()
+    try:res = re.search(r'^[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*', code[index:]).group()
+    except:return {"err": True}
     s = Script(transpile_code(insert_string_after_char(code, '\n'+res+'\n', '\n', line-1)), path=dirname(file))
     for i in range(line-1, len(s._code_lines)-1):
         if (str(s._code_lines[i]).strip()==res.strip()):
