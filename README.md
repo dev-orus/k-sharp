@@ -7,7 +7,7 @@
 <h3 align="center">K# is a programing language that has similar syntax to c and transpiles to python</h3>
 
 ## Install
-- Make sure you have python3.11 or newer
+- Make sure you have python3.12 or newer
 - `git clone https://github.com/dev-orus/k-sharp.git`
 - `cd k-sharp`
 - `python3 install.py`

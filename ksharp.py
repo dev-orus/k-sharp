@@ -48,7 +48,7 @@ if __name__ == "__main__":
             system(f'.env/bin/python {path.join(conf['outDir'], 'main.py')}')
     elif argv[1] == 'install':
         if not path.exists('.env'):
-            system('python3 -m venv .env')
+            system('python3.12 -m venv .env')
         p = '.env/lib/'+listdir('.env/lib')[0]+'/site-packages/stdio'
         if not path.exists(p):
             mkdir(p)
