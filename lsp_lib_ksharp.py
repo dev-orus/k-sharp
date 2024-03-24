@@ -1,5 +1,5 @@
 from jedi import Script
-from compiler import transpile_code
+from compiler import transpile
 import re
 from os.path import join, dirname, exists
 from traceback import format_exc
@@ -78,7 +78,7 @@ def getDefinition(code: str, line: int, colnum: int, file: str):
     index = sum(len(line) + 1 for line in code.split('\n')[:line-1]) + colnum - 1
     try:res = re.search(r'^[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*', code[index:]).group()
     except:return {"err": True}
-    s = Script(transpile_code(insert_string_after_char(code, '\n'+res+'\n', '\n', line-1)), path=dirname(file))
+    s = Script(transpile(insert_string_after_char(code, '\n'+res+'\n', '\n', line-1)), path=dirname(file))
     for i in range(line-1, len(s._code_lines)-1):
         if (str(s._code_lines[i]).strip()==res.strip()):
             c = s.goto(i, len(str(s._code_lines[i]).strip())-1)
@@ -124,7 +124,7 @@ def getCompletion(code: str, line: int, column: int, file: str):
         x = {}
         try:
             res = 'import '+res1[::-1].removeprefix(re_match.group())
-            s = Script(insert_string_after_char(transpile_code(''), '\n'+count_leading(code2)+res+'\n', '\n', 2))
+            s = Script(insert_string_after_char(transpile(''), '\n'+count_leading(code2)+res+'\n', '\n', 2))
             cmp = s.complete(4, len(s._code_lines[3].removesuffix('\n')))
             x = {}
             for d in cmp:
@@ -139,7 +139,7 @@ def getCompletion(code: str, line: int, column: int, file: str):
             return {}
         x = {}
         try:
-            s = Script(transpile_code(insert_string_after_char(insert_string_after_char(code1, '\n'+count_leading(code2)+res+'\n', '\n', line-1), '\n//comp\n', '\n', line-2)))
+            s = Script(transpile(insert_string_after_char(insert_string_after_char(code1, '\n'+count_leading(code2)+res+'\n', '\n', line-1), '\n//comp\n', '\n', line-2)))
             res = res.replace('::', '.').replace('->', '.value.')
             for i in range(line-1, len(s._code_lines)-1):
                 if (str(s._code_lines[i-1]).strip()==res.strip()):

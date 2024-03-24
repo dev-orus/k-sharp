@@ -1,5 +1,6 @@
 env
 __pycache__
+compiler/__pycache__
 .DS_STORE
 bin
 err.log

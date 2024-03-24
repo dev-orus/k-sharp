@@ -1,5 +1,17 @@
+from compiler.ks_parser import parse
+from compiler.syntax import *
+from compiler.ast_ks import *
+
+# def transpile(code: str, indent=0) -> str:
+#     if code.strip() == '' and indent>0:return (' ' * (indent+1))+'...'
+#     ast = parse(code)
+#     pyCode = 'from dataclasses import dataclass\nfrom typing import Any as auto\n' if indent==0 else '\n' + (' ' * (indent+1))
+#     for i in ast:
+#         print(i.type, i.value, sep=' -> ')
+#     return pyCode
+
 import regex as re
-from syntax import *
+from compiler.syntax import *
 from os import path
 from json import load
 
@@ -35,7 +47,7 @@ def trsi(c: str):
     return DC[c] if c in DC else str(c).replace('::', '.')
 
 def transpile_round(code: str) -> str:
-    TOKENS = tokenize(code.removeprefix('(').removesuffix(')'), SYNTAX2)
+    TOKENS = tokenize(code.removeprefix('(').removesuffix(')'))
     pyCode = ''
     for token in TOKENS:
         if token.type == ROUND_BRACKETS:
@@ -67,11 +79,11 @@ def transpile_round(code: str) -> str:
         elif token.type == SQUARE_BRACKETS:
             pyCode+=transpile_square(token.value)
         elif token.type == CURLY_BRACKETS:
-            pyCode+=transpile_curly(token.value[0])
+            pyCode+=transpile_curly(token.value)
     return f'({pyCode})'
 
 def transpile_round2(code: str) -> str:
-    TOKENS = tokenize(code.removeprefix('(').removesuffix(')'), SYNTAX2)
+    TOKENS = tokenize(code.removeprefix('(').removesuffix(')'))
     pyCode = ''
     for token in TOKENS:
         if token.type == ROUND_BRACKETS:
@@ -103,11 +115,11 @@ def transpile_round2(code: str) -> str:
         elif token.type == SQUARE_BRACKETS:
             pyCode+=transpile_square(token.value)
         elif token.type == CURLY_BRACKETS:
-            pyCode+=transpile_curly(token.value[0])
+            pyCode+=transpile_curly(token.value)
     return f'({pyCode})'
 
 def transpile_curly(code: str) -> str:
-    TOKENS = tokenize(code.removeprefix('{').removesuffix('}'), SYNTAX3)
+    TOKENS = tokenize(code.removeprefix('{').removesuffix('}'))
     pyCode = ''
     for token in TOKENS:
         if token.type == ROUND_BRACKETS:
@@ -133,11 +145,11 @@ def transpile_curly(code: str) -> str:
         elif token.type == SQUARE_BRACKETS:
             pyCode+=transpile_square(token.value)
         elif token.type == CURLY_BRACKETS:
-            pyCode+=transpile_curly(token.value[0])
+            pyCode+=transpile_curly(token.value)
     return '{'+pyCode+'}'
 
 def transpile_square(code: str) -> str:
-    TOKENS = tokenize(code.removeprefix('[').removesuffix(']'), SYNTAX5)
+    TOKENS = tokenize(code.removeprefix('[').removesuffix(']'))
     pyCode = ''
     for token in TOKENS:
         if token.type == ROUND_BRACKETS:
@@ -167,69 +179,22 @@ def transpile_square(code: str) -> str:
         elif token.type == SQUARE_BRACKETS:
             pyCode+=transpile_square(token.value)
         elif token.type == CURLY_BRACKETS:
-            pyCode+=transpile_curly(token.value[0])
+            pyCode+=transpile_curly(token.value)
     return '['+pyCode+']'
 
-def transpile_struct(code: str, indent=1):
-    code = code.removeprefix('{').removesuffix('}')
+def transpile(code: str, indent=0) -> str:
     if code.strip() == '' and indent>0:return (' ' * (indent+1))+'...'
-    TOKENS = tokenize(code, SYNTAX4)
-    pyCode = '\n' + (' ' * (indent+1))
-    ptr_decl = False
-    for token in TOKENS:
-        if token.type == SEMICOLON:
-            if ptr_decl:pyCode+=')'
-            ptr_decl = False
-            pyCode+=('\n' + (' ' * (indent+1))) if indent else '\n'
-        elif token.type == VAR_DECL:
-            pyCode+=f'{token.value[1]}: {token.value[0]} = '
-        elif token.type == VAR_SET:
-            pyCode+=f'{token.value[0]} = '
-        elif token.type == PTR_VAR_DECL:
-            ptr_decl = True
-            pyCode+=f'{token.value[2]}: Ptr[{token.value[0]}] = Ptr('
-        elif token.type == NUMBER:
-            pyCode+=token.value[0]
-        elif token.type == PTR_IDENTIFIER:
-            pyCode+=token.value[0]+'.value'
-        elif token.type == OPERATOR:
-            if token.value == '++':
-                pyCode+='+=1'
-            elif token.value == '--':
-                pyCode+='-=1'
-            else:
-                pyCode+=token.value
-        elif token.type == COMMENT:
-            if conf['comments']:
-                pyCode+='#'+token.value[0]
-        elif token.type == IDENTIFIER:
-            pyCode+=trsi(token.value)
-        elif token.type == FUNC_CALL:
-            pyCode+=f"{str(token.value[0]).replace('::', '.')}{transpile_round(token.value[1])}"
-        elif token.type == CURLY_BRACKETS:
-            pyCode+=transpile_curly(token.value[0])
-        elif token.type == DIDENTIFIER:
-            pyCode+=f'{token.value[1]}: {token.value[0]}'
-        elif token.type == SQUARE_BRACKETS:
-            pyCode+=transpile_square(token.value)
-        elif token.type == STRING:
-            pyCode+=token.value
-    return pyCode
-
-def transpile_code(code: str, indent=0) -> str:
-    if code.strip() == '' and indent>0:return (' ' * (indent+1))+'...'
-    TOKENS = tokenize(code, SYNTAX)
-    pyCode = 'from dataclasses import dataclass\nfrom typing import Generic, TypeVar, List, Any as any\nT = TypeVar("T")\n' if indent==0 else '\n' + (' ' * (indent+1))
+    TOKENS = parse(code)
+    pyCode = 'from dataclasses import dataclass\nfrom typing import Any as auto\n' if indent==0 else '\n' + (' ' * (indent+1))
     ignore_fline = False
     if indent:
         ignore_fline = True
     ptr_decl = False
     for i, token in enumerate(TOKENS):
-        # print(token.type, token.value)
         if token.type == FUNC_DECL:
-            pyCode+=f'def {token.value[1]}{transpile_round(token.value[2])} -> {trsi(token.value[0])}:' + transpile_code(str(token.value[3]).removeprefix('{').removesuffix('}'), indent+1) + '\n' + (' ' * (indent+1 if indent else 0))
+            pyCode+=f'def {token.value[1]}{transpile_round(token.value[2])} -> {trsi(token.value[0])}:' + transpile(str(token.value[3]).removeprefix('{').removesuffix('}'), indent+1) + '\n' + (' ' * (indent+1 if indent else 0))
         elif token.type == PTR_FUNC_DECL:
-            pyCode+=f'def {token.value[2]}{transpile_round(token.value[3])} -> Ptr[{trsi(token.value[0])}]:' + transpile_code(str(token.value[4]).removeprefix('{').removesuffix('}'), indent+1) + '\n' + (' ' * (indent+1 if indent else 0))
+            pyCode+=f'def {token.value[1]}{transpile_round(token.value[2])} -> Ptr[{trsi(token.value[0])}]:' + transpile(str(token.value[3]).removeprefix('{').removesuffix('}'), indent+1) + '\n' + (' ' * (indent+1 if indent else 0))
         elif token.type == COMMENT:
             if ptr_decl:pyCode+=')'
             ptr_decl = False
@@ -273,12 +238,12 @@ def transpile_code(code: str, indent=0) -> str:
         elif token.type == FUNC_CALL:
             pyCode+=f"{str(token.value[0]).replace('::', '.')}{transpile_round(token.value[1])}"
         elif token.type == CURLY_BRACKETS:
-            pyCode+=transpile_curly(token.value[0])
-        elif token.type == INCLUDE:
-            pyCode+='from '+str(token.value[0]).removeprefix('<').removesuffix('>') + ' import *'
+            pyCode+=transpile_curly(token.value)
+        # elif token.type == INCLUDE:
+            # pyCode+='from '+str(token.value[0]).removeprefix('<').removesuffix('>') + ' import *'
         elif token.type == STRUCT_DECL:
             pyCode+='@dataclass\n'
-            pyCode+=f'class {token.value[0]}:{transpile_struct(token.value[1], indent+1)}\n'
+            pyCode+=f'class {token.value[0]}:{transpile(token.value[1].removeprefix('{').removesuffix('}'), indent+1)}\n'
         elif token.type == PTR_SCOPE:
             pyCode+='.value.'
         elif token.type == DIDENTIFIER:
@@ -290,16 +255,16 @@ def transpile_code(code: str, indent=0) -> str:
         elif token.type == PTR_DIDENTIFIER_CALL:
             pyCode+=f'{token.value[2]}: Ptr[{trsi(token.value[0])}] = Ptr({trsi(token.value[0])}{transpile_round(token.value[3])})'
         elif token.type == CLASS_DECL:
-            pyCode+=f'class {token.value[0]}:{transpile_code(str(token.value[1]).removeprefix('{').removesuffix('}'), indent+1)}'
+            pyCode+=f'class {token.value[0]}:{transpile(str(token.value[1]).removeprefix('{').removesuffix('}'), indent+1)}'
         elif token.type == DECORATOR:
             pyCode+='@'+token.value[0]
         elif token.type == SQUARE_BRACKETS:
             pyCode+=transpile_square(token.value)
         elif token.type == SCOPE_KEYWORD:
-            if token.value[0] in ('try', 'else'):
-                pyCode+=f'{token.value[0]}:{transpile_code(str(token.value[1]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
+            if len(token.value)==2:
+                pyCode+=f'{token.value[0]}:{transpile(str(token.value[1]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
             else:
-                pyCode+=f'{token.value[0]} {transpile_round2(token.value[1]).removeprefix('(').removesuffix(')')}:{transpile_code(str(token.value[2]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
+                pyCode+=f'{token.value[0]} {transpile_round2(token.value[1]).removeprefix('(').removesuffix(')')}:{transpile(str(token.value[2]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent+1))}'
         elif token.type == STRING:
             pyCode+=token.value
         else:
