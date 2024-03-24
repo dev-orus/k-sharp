@@ -7,7 +7,7 @@
 <h3 align="center">K# is a programing language that has similar syntax to c and transpiles to python</h3>
 
 ## Imortant Message
-We are rebranding from k# to wisk. if you are an artist we would like for you to work with us on the logo desgn. For the marketing logo and file icon
+We are rebranding from k# to wisp. if you are an artist we would like for you to work with us on the logo desgn. For the marketing logo and file icon
 
 ## Install
 - Make sure you have python3.12 or newer

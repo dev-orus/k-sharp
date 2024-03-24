@@ -41,7 +41,7 @@ SYNTAX = {
     r'^# *include *(<(?:[^<>]|(?R))*>)': INCLUDE,
     r'^# *include *("(?:[^""]|(?R))*")': INCLUDE_LOCAL,
     r'^return|yield|raise': KEYWORD,
-    r'^(if|elif|except|for) *(\((?:[^()]|\([^()]*\))*\)) *(\{(?:[^{}]|\{[^{}]*\})*\})': SCOPE_KEYWORD,
+    r'^(if|elif|except|for|while) *(\((?:[^()]|\([^()]*\))*\)) *(\{(?:[^{}]|\{[^{}]*\})*\})': SCOPE_KEYWORD,
     r'^(try|else|) *(\{(?:[^{}]|\{[^{}]*\})*\})': SCOPE_KEYWORD,
     r'^class +([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*) *(\{(?:[^{}]|\{[^{}]*\})*\})': CLASS_DECL,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*) *([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::)*) *(\((?:[^()]|\([^()]*\))*\)) *(\{(?:[^{}]|\{[^{}]*\})*\})': FUNC_DECL,
