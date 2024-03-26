@@ -13,15 +13,15 @@ class Token(TypedDict):
 
 KEYWORD_CHANGE = {'NULL': 'None', 'void': 'None', 'false': 'False', 'true': 'True', '&&': ' and ', '||': ' or '}
 
-def tokenize(code: str) -> list[Token]:
+def tokenize(code: str, sntx=syntax.SYNTAX) -> list[Token]:
     tokens: list[Token] = []
     while code:
-        for s in syntax.SYNTAX:
+        for s in sntx:
             re_match = re.match(s, code)
             if re_match:
-                if syntax.SYNTAX[s]!=syntax.WHITESPACE:
+                if sntx[s]!=syntax.WHITESPACE:
                     re_groups = re_match.groups()
-                    tokens.append({"type": syntax.SYNTAX[s], "value": re_groups if re_groups else re_match.group()})
+                    tokens.append({"type": sntx[s], "value": re_groups if re_groups else re_match.group()})
                 code = code.removeprefix(re_match.group())
                 break
         if not re_match:
@@ -29,4 +29,4 @@ def tokenize(code: str) -> list[Token]:
     return tokens
 
 def pci(id: str) -> str:
-    return KEYWORD_CHANGE[id] if id in KEYWORD_CHANGE else str(id).replace('::', '.').replace('->', '.value.').replace('*', '.value')
+    return KEYWORD_CHANGE[id] if id in KEYWORD_CHANGE else str(id).replace('::', '.').replace('->', '.value.')

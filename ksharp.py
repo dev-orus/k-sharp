@@ -1,4 +1,4 @@
-import old_compiler
+import compiler
 from sys import argv
 import re
 from json import load, dump
@@ -8,9 +8,9 @@ def transpile(fname):
     with open(fname)as f:
         with open(path.join(conf['outDir'], fname).removesuffix('ks')+'py', 'w')as fy:
             if conf['compact']:
-                fy.write(re.sub(r'\n\s*\n', '\n', old_compiler.transpile(f.read())))
+                fy.write(re.sub(r'\n\s*\n', '\n', compiler.transpile(f.read())))
             else:
-                fy.write(old_compiler.transpile(f.read()))
+                fy.write(compiler.transpile(f.read()))
 
 def listDir(c):
     for i in listdir(c):

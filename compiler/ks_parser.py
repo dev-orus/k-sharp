@@ -6,16 +6,16 @@ from typing import TypedDict, Any, NotRequired
 class Ast:
     # type: str
     # contents: Token | str
-    def __init__(self, token_type, value):
+    def __init__(self, token_type, value, htype = 0):
         self.type = token_type
         self.value = value
+        self.htype = htype
 
 def ctt(tokens: list[Token], i: int):
     return tokens[i]['type'] if i < len(tokens) else False
 
-def parse(code: str):
-    TOKENS: list[Token] = tokenize(code)
-    current_statement: list[Token] = []
+def parse(code: str, syntax=SYNTAX):
+    TOKENS: list[Token] = tokenize(code, syntax)
     ignore = 0
     ast: list[Ast] = []
     for i, token in enumerate(TOKENS):
@@ -30,24 +30,54 @@ def parse(code: str):
             if hid1==ROUND_BRACKETS and hid2==CURLY_BRACKETS:
                 ast.append(Ast(FUNC_DECL, (pci(token['value']), pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']), pci(TOKENS[i+3]['value']))))
                 ignore = 3
-            elif hid2 == OPERATOR:
-                ast.append(Ast(VAR_DECL, (pci(token['value']), pci(TOKENS[i+1]['value']))) if hid==IDENTIFIER else Ast(IDENTIFIER, pci(token['value'])))
-            else:
-                ast.append(Ast(DIDENTIFIER, (pci(token['value']), pci(TOKENS[i+1]['value']))) if hid==IDENTIFIER else Ast(IDENTIFIER, pci(token['value'])))
+            elif hid == OPERATOR and hid1 == OPERATOR and TOKENS[i+2]['value']=='=':
+                ast.append(Ast(IDENTIFIER, pci(token['value'])))
+                ast.append(Ast(OPERATOR, pci(TOKENS[i+1]['value'])))
+                ast.append(Ast(OPERATOR, pci(TOKENS[i+2]['value'])))
+                ignore = 2
+            elif hid == OPERATOR and TOKENS[i+1]['value']=='=':
+                ast.append(Ast(VAR_SET, pci(token['value'])))
                 ignore = 1
+            elif hid == OPERATOR and TOKENS[i+1]['value'] in ('++', '--'):
+                ast.append(Ast(IDENTIFIER, pci(token['value'])))
+                ast.append(Ast(OPERATOR, TOKENS[i+1]['value']))
+                ignore = 1
+            elif hid==IDENTIFIER and hid1 == OPERATOR and TOKENS[i+2]['value']=='=':
+                ast.append(Ast(VAR_DECL, (pci(token['value']), pci(TOKENS[i+1]['value']))))
+                ignore = 2
+            elif hid==IDENTIFIER:
+                ast.append(Ast(DIDENTIFIER, (pci(token['value']), pci(TOKENS[i+1]['value']))))
+                ignore = 1
+            else:
+                ast.append(Ast(IDENTIFIER, token['value']))
 
         elif token['type'] == PTR_IDENTIFIER:
             hid = ctt(TOKENS, i+1)
             hid1 = ctt(TOKENS, i+2)
             hid2 = ctt(TOKENS, i+3)
-            if hid1==ROUND_BRACKETS and hid2==CURLY_BRACKETS:
+            if hid==IDENTIFIER and hid1==ROUND_BRACKETS and hid2==CURLY_BRACKETS:
                 ast.append(Ast(PTR_FUNC_DECL, (pci(token['value'][0]), pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']), pci(TOKENS[i+3]['value']))))
                 ignore = 3
-            elif hid2 == OPERATOR:
-                ast.append(Ast(PTR_VAR_DECL, (pci(token['value'][0]), pci(TOKENS[i+1]['value']))) if hid==IDENTIFIER else Ast(IDENTIFIER, pci(token['value'])))
-            else:
-                ast.append(Ast(PTR_DIDENTIFIER, (pci(token['value'][0]), pci(TOKENS[i+1]['value']))) if hid==IDENTIFIER else Ast(IDENTIFIER, pci(token['value'])))
+            elif hid == OPERATOR and hid1 == OPERATOR and TOKENS[i+2]['value']=='=':
+                ast.append(Ast(PTR_IDENTIFIER, pci(token['value'][0])))
+                ast.append(Ast(OPERATOR, pci(TOKENS[i+1]['value'])))
+                ast.append(Ast(OPERATOR, pci(TOKENS[i+2]['value'])))
+                ignore = 2
+            elif hid == OPERATOR and TOKENS[i+1]['value']=='=':
+                ast.append(Ast(PTR_VAR_SET, pci(token['value'][0])))
                 ignore = 1
+            elif hid == OPERATOR and TOKENS[i+1]['value'] in ('++', '--'):
+                ast.append(Ast(PTR_IDENTIFIER, pci(token['value'][0])))
+                ast.append(Ast(OPERATOR, TOKENS[i+1]['value']))
+                ignore = 1
+            elif hid==IDENTIFIER and hid1 == OPERATOR and TOKENS[i+2]['value']=='=':
+                ast.append(Ast(PTR_VAR_DECL, (pci(token['value'][0]), pci(TOKENS[i+1]['value']))))
+                ignore = 2
+            elif hid==IDENTIFIER:
+                ast.append(Ast(PTR_DIDENTIFIER, (pci(token['value'][0]), pci(TOKENS[i+1]['value']))))
+                ignore = 1
+            else:
+                ast.append(Ast(PTR_IDENTIFIER, token['value']))
         
         elif token['type'] == KEYWORD:
             hid = ctt(TOKENS, i+1)
@@ -61,7 +91,6 @@ def parse(code: str):
                     ast.append(Ast(CLASS_DECL, (pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']))))
                     ignore = 2
             elif token['value'] in ('if', 'elif', 'except'):
-                print(token['value'])
                 if hid==ROUND_BRACKETS and hid1==CURLY_BRACKETS: 
                     ast.append(Ast(SCOPE_KEYWORD, (token['value'], pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']))))
                     ignore = 2
@@ -69,9 +98,28 @@ def parse(code: str):
                     ast.append(Ast(SCOPE_KEYWORD, (token['value'], pci(TOKENS[i+1]['value']))))
                     ignore = 2
             else:
-                if hid:
-                    ast.append(Ast(SCOPE_KEYWORD, (token['value'], pci(TOKENS[i+1]['value']))))
+                ast.append(Ast(KEYWORD, token['value']))
+
+        elif token['type'] == POWERWORD:
+            hid = ctt(TOKENS, i+1)
+            hid1 = ctt(TOKENS, i+2)
+            if token['value'][0] == 'include':
+                if hid==ANGLE_BRACKETS:
+                    ast.append(Ast(POWERWORD, (token['value'][0], TOKENS[i+1]['value']), 0))
+                    ignore = 1
+                elif hid==STRING:
+                    ast.append(Ast(POWERWORD, (token['value'][0], TOKENS[i+1]['value']), 1))
+                    ignore = 1
+                elif hid==IDENTIFIER:
+                    ast.append(Ast(POWERWORD, (token['value'][0], TOKENS[i+1]['value'], TOKENS[i+2]['value']), 2 if hid1==ANGLE_BRACKETS else 3))
                     ignore = 2
+                elif hid==ROUND_BRACKETS:
+                    ast.append(Ast(POWERWORD, (token['value'][0], TOKENS[i+1]['value'], TOKENS[i+2]['value']), 4 if hid1==ANGLE_BRACKETS else 5))
+                    ignore = 2
+        elif token['type'] == SOPERATOR:
+            ast.append(Ast(OPERATOR, token['value']))
+        elif token['type'] == OPERATOR:
+            ast.append(Ast(OPERATOR, token['value']))
         else:
             ast.append(Ast(token['type'], token['value']))
 

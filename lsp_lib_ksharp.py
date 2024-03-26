@@ -143,7 +143,7 @@ def getCompletion(code: str, line: int, column: int, file: str):
             res = res.replace('::', '.').replace('->', '.value.')
             for i in range(line-1, len(s._code_lines)-1):
                 if (str(s._code_lines[i-1]).strip()==res.strip()):
-                    cmp = s.complete(i, len(s._code_lines[i-1].rstrip()))
+                    cmp = s.complete(i, len(s._code_lines[i-1])-1)
                     x = {}
                     for d in cmp:
                         x[d.name] = {'type': d.type, 'doc': '', 'sign': ''}
