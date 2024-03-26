@@ -63,15 +63,6 @@ def count_leading(s):
         return re_match.group()
     return ''
 
-# def insert_string_after_char(original_string, insert_string, char, x):
-#     if x == 0:
-#         return original_string
-#     parts = original_string.split(char)
-#     for i in range(len(parts)):
-#         if i % x == 0 and i != 0:
-#             parts[i] += insert_string
-#     return char.join(parts)
-
 def insert_string_after_char(original_string, insert_string, char, x):
     parts = original_string.split(char)
     for i in range(len(parts)):
@@ -133,7 +124,7 @@ def getCompletion(code: str, line: int, column: int, file: str):
         try:
             res = 'import '+res1[::-1].removeprefix(re_match.group())
             s = Script(res)
-            cmp = s.complete(1, len(s._code_lines[0].rstrip()))
+            cmp = s.complete(1, len(s._code_lines[0].removesuffix('\n')))
             x = {}
             for d in cmp:
                 x[d.name] = {'type': d.type, 'doc': '', 'sign': '', 'glb': '<' in res1}
@@ -150,13 +141,11 @@ def getCompletion(code: str, line: int, column: int, file: str):
                 res = 'import '+res1[::-1].replace('::', '.').replace('->', '.value.').removeprefix(re_match2.group())
             s = Script(res)
             cmp = s.complete(1, len(s._code_lines[0].removesuffix('\n')))
-            x = {}
             for d in cmp:
                 x[d.name] = {'type': d.type, 'doc': '', 'sign': '', 'glb': '<' in res1}
         except:
             with open(join(parent, 'err.log'), 'w')as f:
                 print(format_exc(), file=f)
-            x = {}
         return x
     elif re_match1:
         x = {}
@@ -166,13 +155,11 @@ def getCompletion(code: str, line: int, column: int, file: str):
                 res = res.strip()
             s = Script(res)
             cmp = s.complete(1, len(s._code_lines[0].removesuffix('\n')))
-            x = {}
             for d in cmp:
                 x[d.name] = {'type': d.type, 'doc': '', 'sign': '', 'glb': '<' in res1}
         except:
             with open(join(parent, 'err.log'), 'w')as f:
                 print(format_exc(), file=f)
-            x = {}
         return x
     else:
         if ('"' in code2 and code2.count('"') % 2 == 1) or ("'" in code2 and code2.count("'") % 2 == 1):
@@ -184,14 +171,12 @@ def getCompletion(code: str, line: int, column: int, file: str):
             for i in range(line-2, len(s._code_lines)-1):
                 if (str(s._code_lines[i-1]).strip()==res.strip()):
                     cmp = s.complete(i, len(s._code_lines[i-1])-1)
-                    x = {}
                     for d in cmp:
                         x[d.name] = {'type': d.type, 'doc': '', 'sign': ''}
                     break
         except:
             with open(join(parent, 'err.log'), 'w')as f:
                 print(format_exc(), file=f)
-            x = {}
         z = matchAll(res.strip())
         for a in x.keys():
             b = x[a]
