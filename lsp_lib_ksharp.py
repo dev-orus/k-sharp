@@ -6,7 +6,7 @@ from traceback import format_exc
 
 parent = dirname(__file__)
 
-ALLOWED = '"\'# -<>.:#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+ALLOWED = '{,"\'# -<>.:#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 ALLOWED2 = '-<>.:#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
 patterns = [
@@ -38,6 +38,11 @@ patterns = [
     {
         'pattern': re.compile(r'^tr?u?e?'),
         'label': 'true',
+        'type': 'keyword'
+    },
+    {
+        'pattern': re.compile(r'^us?e?'),
+        'label': 'use',
         'type': 'keyword'
     }
 ]
@@ -113,7 +118,10 @@ def getCompletion(code: str, line: int, column: int, file: str):
     re_match = re.match(r'^# *include *(<|")', res1[::-1])
     if re_match and res1[::-1].strip().endswith('>'):
         return {}
+    re_match1 = re.match(r'^\s*use *', res1[::-1])
+    re_match2 = re.match(r'^\s*use *[_a-zA-Z](?:[a-zA-Z0-9_.]|::|->)*\{', res1[::-1])
     res = ''
+    z = {}
     for c in res1:
         if c in ALLOWED2:
             res+=c
@@ -124,8 +132,40 @@ def getCompletion(code: str, line: int, column: int, file: str):
         x = {}
         try:
             res = 'import '+res1[::-1].removeprefix(re_match.group())
-            s = Script(insert_string_after_char(transpile(''), '\n'+count_leading(code2)+res+'\n', '\n', 2))
-            cmp = s.complete(4, len(s._code_lines[3].removesuffix('\n')))
+            s = Script(res)
+            cmp = s.complete(1, len(s._code_lines[0].rstrip()))
+            x = {}
+            for d in cmp:
+                x[d.name] = {'type': d.type, 'doc': '', 'sign': '', 'glb': '<' in res1}
+        except:
+            with open(join(parent, 'err.log'), 'w')as f:
+                print(format_exc(), file=f)
+            x = {}
+        return x
+    elif re_match2:
+        x = {}
+        try:
+            res = transpile(res1[::-1]+'}', 1).strip()
+            if not res.startswith('from'):
+                res = 'import '+res1[::-1].replace('::', '.').replace('->', '.value.').removeprefix(re_match2.group())
+            s = Script(res)
+            cmp = s.complete(1, len(s._code_lines[0].removesuffix('\n')))
+            x = {}
+            for d in cmp:
+                x[d.name] = {'type': d.type, 'doc': '', 'sign': '', 'glb': '<' in res1}
+        except:
+            with open(join(parent, 'err.log'), 'w')as f:
+                print(format_exc(), file=f)
+            x = {}
+        return x
+    elif re_match1:
+        x = {}
+        try:
+            res = transpile(res1[::-1], 1).lstrip()
+            if not res1[::-1].replace('::', '.').endswith('.'):
+                res = res.strip()
+            s = Script(res)
+            cmp = s.complete(1, len(s._code_lines[0].removesuffix('\n')))
             x = {}
             for d in cmp:
                 x[d.name] = {'type': d.type, 'doc': '', 'sign': '', 'glb': '<' in res1}
@@ -138,10 +178,10 @@ def getCompletion(code: str, line: int, column: int, file: str):
         if ('"' in code2 and code2.count('"') % 2 == 1) or ("'" in code2 and code2.count("'") % 2 == 1):
             return {}
         x = {}
+        res = res.replace('::', '.').replace('->', '.value.')
         try:
             s = Script(transpile(insert_string_after_char(insert_string_after_char(code1, '\n'+count_leading(code2)+res+'\n', '\n', line-1), '\n//comp\n', '\n', line-2)))
-            res = res.replace('::', '.').replace('->', '.value.')
-            for i in range(line-1, len(s._code_lines)-1):
+            for i in range(line-2, len(s._code_lines)-1):
                 if (str(s._code_lines[i-1]).strip()==res.strip()):
                     cmp = s.complete(i, len(s._code_lines[i-1])-1)
                     x = {}
@@ -157,4 +197,4 @@ def getCompletion(code: str, line: int, column: int, file: str):
             b = x[a]
             if a not in DISABLED:
                 z[a] = b
-    return z
+        return z
