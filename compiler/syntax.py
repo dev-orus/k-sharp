@@ -1,4 +1,6 @@
 KEYWORD = 'KEYWORD'
+USE_KEYWORD = 'USE_KEYWORD'
+USE_KEYWORD2 = 'USE_KEYWORD2'
 WHITESPACE = 'WHITESPACE'
 NEWLINE = 'NEWLINE'
 SEMICOLON = 'SEMICOLON'
@@ -25,7 +27,7 @@ SYNTAX = {
     r'^\;': SEMICOLON,
     r'^\s': WHITESPACE,
     r'^\-\>': PTR_SCOPE,
-    r'^return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!': KEYWORD,
+    r'^use|return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!': KEYWORD,
     r'^# *(include|del)': POWERWORD,
     r'^//(.+?)(?=\n|$)': COMMENT,
     r'^[-]?[0-9]*\.?[0-9]+|[0-9]+': NUMBER,

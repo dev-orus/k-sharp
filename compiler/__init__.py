@@ -174,6 +174,16 @@ def transpile(code: str, indent=0) -> str:
                 pyCode+='#'+token.value[0]
         elif token.type == IDENTIFIER:
             pyCode+=token.value
+        elif token.type == USE_KEYWORD:
+            if '.' in token.value:
+                v = token.value.split('.')
+                v1 = v[-1]
+                v2 = '.'.join(v[0:-1])
+                pyCode+=f'from {v2} import {v1}'
+            else:
+                pyCode+=f'import {token.value}'
+        elif token.type == USE_KEYWORD2:
+            pyCode+=f'from {token.value[0].removesuffix('.')} import {str(token.value[1]).removeprefix('{').removesuffix('}')}'
         elif token.type == KEYWORD:
             pyCode+=token.value+' '
         elif token.type == ROUND_BRACKETS:
@@ -219,12 +229,6 @@ def transpile(code: str, indent=0) -> str:
                     pyCode+='from '+str(token.value[1][0]).removeprefix('<').removesuffix('>') + ' import *'
                 if token.htype==1:
                     pyCode+='from '+str(token.value[1]).removeprefix('"').removesuffix('"') + ' import *'
-                elif token.htype==2:
-                    pyCode+='import '+str(token.value[2][0]).removeprefix('<').removesuffix('>')+' as '+str(token.value[1])
-                elif token.htype==4:
-                    pyCode+='from '+str(token.value[2][0]).removeprefix('<').removesuffix('>')+' import '+str(token.value[1])
-                elif token.htype==5:
-                    pyCode+='from '+str(token.value[2]).removeprefix('"').removesuffix('"')+' import '+str(token.value[1])
         elif token.type == STRUCT_DECL:
             pyCode+='@dataclass\n'
             pyCode+=f'class {token.value[0]}:{transpile(token.value[1].removeprefix('{').removesuffix('}'), indent+1)}\n'

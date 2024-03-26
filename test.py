@@ -1,9 +1,7 @@
 from compiler.syntax import *
 from compiler import transpile
 
-codeIn = """int* main(int x){
-    x = [1, 2, 3, 4, 5];
-}"""
+codeIn = """use os::path::{dirname, exists};"""
 
 out = transpile(codeIn)
 

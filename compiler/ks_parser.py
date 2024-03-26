@@ -97,6 +97,13 @@ def parse(code: str, syntax=SYNTAX):
                 elif token['value'] == 'except':
                     ast.append(Ast(SCOPE_KEYWORD, (token['value'], pci(TOKENS[i+1]['value']))))
                     ignore = 2
+            elif token['value'] == 'use':
+                if hid==IDENTIFIER and hid1==CURLY_BRACKETS:
+                    ast.append(Ast(USE_KEYWORD2, (pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']))))
+                    ignore = 2
+                elif hid==IDENTIFIER:
+                    ast.append(Ast(USE_KEYWORD, pci(TOKENS[i+1]['value'])))
+                    ignore = 1
             else:
                 ast.append(Ast(KEYWORD, token['value']))
 
@@ -110,12 +117,6 @@ def parse(code: str, syntax=SYNTAX):
                 elif hid==STRING:
                     ast.append(Ast(POWERWORD, (token['value'][0], TOKENS[i+1]['value']), 1))
                     ignore = 1
-                elif hid==IDENTIFIER:
-                    ast.append(Ast(POWERWORD, (token['value'][0], TOKENS[i+1]['value'], TOKENS[i+2]['value']), 2 if hid1==ANGLE_BRACKETS else 3))
-                    ignore = 2
-                elif hid==ROUND_BRACKETS:
-                    ast.append(Ast(POWERWORD, (token['value'][0], TOKENS[i+1]['value'], TOKENS[i+2]['value']), 4 if hid1==ANGLE_BRACKETS else 5))
-                    ignore = 2
         elif token['type'] == SOPERATOR:
             ast.append(Ast(OPERATOR, token['value']))
         elif token['type'] == OPERATOR:
