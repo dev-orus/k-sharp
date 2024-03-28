@@ -1,12 +1,12 @@
-from compiler.ks_parser import parse
+from compiler.ws_parser import parse
 from compiler.syntax import *
-from compiler.ast_ks import *
+from compiler.ast_ws import *
 from compiler.syntax import *
 from os import path
 from json import load
 
-if path.exists('ksconfig.json'):
-    with open('ksconfig.json')as f:
+if path.exists('wsconfig.json'):
+    with open('wsconfig.json')as f:
         conf = load(f)
 else:
     conf = {'outDir': 'out', 'compact': True, 'comments': False}
@@ -255,6 +255,8 @@ def transpile(code: str, indent=0) -> str:
                 pyCode+=f'{token.value[0]} {transpile_round2(token.value[1]).removeprefix('(').removesuffix(')')}:{transpile(str(token.value[2]).removeprefix('{').removesuffix('}'), indent+1)}\n{(' ' * (indent*2))}'
         elif token.type == STRING:
             pyCode+=token.value
+        elif token.type == MCOMMENT:
+            pyCode+=f'''"""{str(token.value).removeprefix("/*").removesuffix('*/')}"""'''
         else:
             # In case there is a token that isn't handled (Please send feedback if so)
             print('Problem: There is a unhandled token ->', token.type, token.value)

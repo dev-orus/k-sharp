@@ -16,6 +16,7 @@ STRING = 'STRING'
 SEP = 'SEP'
 SEP1 = 'SEP1'
 COMMENT = 'COMMENT'
+MCOMMENT = 'COMMENT_M'
 PTR_SCOPE = 'PTR_SCOPE'
 OPERATOR = 'OPERATOR'
 POWERWORD = 'POWERWORD'
@@ -30,6 +31,7 @@ SYNTAX = {
     r'^use|return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!': KEYWORD,
     r'^# *(include|del)': POWERWORD,
     r'^//(.+?)(?=\n|$)': COMMENT,
+    r'\/\*(?:[^\/\*\*\/]|(?R))*\*\/': MCOMMENT,   
     r'^[-]?[0-9]*\.?[0-9]+|[0-9]+': NUMBER,
     r'^([-]?[0-9]*\.?[0-9]+)': NUMBER,
     r'^\"(?:[^""]|(?R))*\"': STRING,
@@ -54,6 +56,7 @@ SYNTAX2 = {
     r'^return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!': KEYWORD,
     r'^# *(include|del)': POWERWORD,
     r'^//(.+?)(?=\n|$)': COMMENT,
+    r'\/\*(?:[^\/\*\*\/]|(?R))*\*\/': MCOMMENT,   
     r'^[-]?[0-9]*\.?[0-9]+|[0-9]+': NUMBER,
     r'^([-]?[0-9]*\.?[0-9]+)': NUMBER,
     r'^\"(?:[^""]|(?R))*\"': STRING,
