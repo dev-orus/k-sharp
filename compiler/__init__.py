@@ -19,11 +19,12 @@ class Token:
 def transpile_round(code: str) -> str:
     TOKENS = parse(code.removeprefix('(').removesuffix(')'), SYNTAX2)
     pyCode = ''
+    ptr_decl = False
     for token in TOKENS:
         if token.type == ROUND_BRACKETS:
             pyCode+=transpile_round(token.value)
         elif token.type == NUMBER:
-            pyCode+=token.value[0]
+            pyCode+=token.value
         elif token.type == PTR_IDENTIFIER:
             pyCode+=token.value[0]+'.value'
         elif token.type == IDENTIFIER:
@@ -34,9 +35,17 @@ def transpile_round(code: str) -> str:
         elif token.type == STRING:
             pyCode+=token.value
         elif token.type == SEP:
+            if ptr_decl:
+                pyCode+=')'
+                ptr_decl = False
             pyCode+=', '
         elif token.type == DIDENTIFIER:
             pyCode+=f'{token.value[1]}: {token.value[0]}'.replace('::', '.')
+        elif token.type == PTR_DIDENTIFIER:
+            pyCode+=f'{token.value[1]}: Ptr[{token.value[0]}]'.replace('::', '.')
+        elif token.type == PTR_VAR_DECL:
+            pyCode+=f'{token.value[1]}: Ptr[{token.value[0]}] = Ptr('
+            ptr_decl = True
         elif token.type == PTR_SCOPE:
             pyCode+='.value.'
         elif token.type == OPERATOR:
@@ -50,6 +59,9 @@ def transpile_round(code: str) -> str:
             pyCode+=transpile_square(token.value)
         elif token.type == CURLY_BRACKETS:
             pyCode+=transpile_curly(token.value)
+    if ptr_decl:
+        pyCode+=')'
+        ptr_decl = False
     return f'({pyCode})'
 
 def transpile_round2(code: str) -> str:
@@ -59,7 +71,7 @@ def transpile_round2(code: str) -> str:
         if token.type == ROUND_BRACKETS:
             pyCode+=transpile_round(token.value)
         elif token.type == NUMBER:
-            pyCode+=token.value[0]
+            pyCode+=token.value
         elif token.type == PTR_IDENTIFIER:
             pyCode+=token.value[0]+'.value'
         elif token.type == IDENTIFIER:
@@ -95,7 +107,7 @@ def transpile_curly(code: str) -> str:
         if token.type == ROUND_BRACKETS:
                 pyCode+=transpile_round(token.value)
         elif token.type == NUMBER:
-            pyCode+=token.value[0]
+            pyCode+=token.value
         elif token.type == PTR_IDENTIFIER:
             pyCode+=token.value[0]+'.value'
         elif token.type == IDENTIFIER:
@@ -127,7 +139,7 @@ def transpile_square(code: str) -> str:
         if token.type == ROUND_BRACKETS:
             pyCode+=transpile_round(token.value)
         elif token.type == NUMBER:
-            pyCode+=token.value[0]
+            pyCode+=token.value
         elif token.type == PTR_IDENTIFIER:
             pyCode+=token.value[0]+'.value'
         elif token.type == IDENTIFIER:

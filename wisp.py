@@ -6,7 +6,7 @@ from os import system, path, listdir, mkdir, name
 
 def transpile(fname):
     with open(fname)as f:
-        with open(path.join(conf['outDir'], fname).removesuffix('ks')+'py', 'w')as fy:
+        with open(path.join(conf['outDir'], fname).removesuffix('ws')+'py', 'w')as fy:
             if conf['compact']:
                 fy.write(re.sub(r'\n\s*\n', '\n', compiler.transpile(f.read())))
             else:
@@ -15,19 +15,19 @@ def transpile(fname):
 def listDir(c):
     for i in listdir(c):
         x = path.join(c, i)
-        if x.endswith('.ks'):
+        if x.endswith('.ws'):
             transpile(x)
         elif x in conf['includes']:
             listdir(x)
 
 if __name__ == "__main__":
-    if path.exists('ksconfig.json'):
-        with open('ksconfig.json')as f:
+    if path.exists('wsconfig.json'):
+        with open('wsconfig.json')as f:
             conf = load(f)
     else:
         conf = {'outDir': 'out', 'compact': True, 'includes': '', 'modules': []}
     if len(argv) == 1:
-        print('ksharp <type>\ntypes:', 'build: builds', 'install: installs libraries and modules from the ksconfig file', 'init: create ksconfig file', sep='\n  ')
+        print('wsharp <type>\ntypes:', 'build: builds', 'install: installs libraries and modules from the wsconfig file', 'init: create wsconfig file', sep='\n  ')
         quit()
     if argv[1] == 'build':
         if not path.exists(conf['outDir']):
@@ -71,7 +71,7 @@ class Ptr(Generic[T]):
             for m in conf['modules']:
                 system(f'.env/bin/pip install {m}')
     elif argv[1] == 'init':
-        with open('ksconfig.json', 'w')as f:
+        with open('wsconfig.json', 'w')as f:
             dump({'outDir': 'out', 'compact': True, 'includes': '', 'modules': [], 'comments': False}, f, indent=2)
     else:
-        print('ksharp <type>\ntypes:', 'build: builds', 'install: installs libraries and modules from the ksconfig file', 'init: create ksconfig file', sep='\n  ')
+        print('wsharp <type>\ntypes:', 'build: builds', 'install: installs libraries and modules from the wsconfig file', 'init: create wsconfig file', sep='\n  ')

@@ -22,7 +22,7 @@ def parse(code: str, syntax=SYNTAX):
         if ignore:
             ignore-=1
             continue
-
+        
         if token['type'] == IDENTIFIER:
             hid = ctt(TOKENS, i+1)
             hid1 = ctt(TOKENS, i+2)

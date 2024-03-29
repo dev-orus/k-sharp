@@ -4,6 +4,7 @@ from json import dumps
 # Windows not supported (yet)
 if os.name == 'nt':...
 else:
+    input('WARNING: Please make sure you have the latest version of node and npm\nPress enter to continue')
     d = os.path.dirname(__file__)
     if not os.path.exists(os.path.join(d, 'env')):
         os.system(f'python3.12 -m venv {os.path.join(d, 'env')}')

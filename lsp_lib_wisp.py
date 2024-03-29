@@ -65,16 +65,16 @@ def count_leading(s):
 
 def extract_params(params_string):
     wispCode = '\n  '
-    pattern = r'([*_a-zA-Z][a-zA-Z0-9_.\[\]]*)\s*(?::\s*([*_a-zA-Z][a-zA-Z0-9_.\[\]]*))?(?:(.*?(?=,|$)))?'
+    pattern = r'([&_a-zA-Z][a-zA-Z0-9_.\[\]]*)\s*(?::\s*([&_a-zA-Z][a-zA-Z0-9_.\[\]]*))?(?:(.*?(?=,|$)))?'
     matches: list[tuple[str]] = re.findall(pattern, params_string)
     for m in matches:
         if m[1]:
             wispCode+=m[1]+' '
-        if m[0].strip().startswith('**'):
-            wispCode+='&&'
-        elif m[0].strip().startswith('*'):
-            wispCode+='&'
-        wispCode+=m[0].lstrip('*')
+        # if m[0].strip().startswith('**'):
+            # wispCode+='&&'
+        # elif m[0].strip().startswith('*'):
+            # wispCode+='&'
+        wispCode+=m[0]
         if m[2]:
             wispCode+=m[2]
         wispCode+=",\n  "
