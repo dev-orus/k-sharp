@@ -11,13 +11,14 @@ else:
     if not os.path.exists(os.path.join(d, 'bin')):
         os.mkdir(os.path.join(d, 'bin'))
     with open(os.path.join(d, 'bin', 'wisp'), 'w')as f:
-        f.write(f"""#!sh
+        f.write(f"""#!/bin/bash
 {os.path.join(d, 'env', 'bin', 'python3')} {os.path.join(d, 'wisp.py')} $1""")
     with open(os.path.join(d, 'bin', 'wisp-lsp'), 'w')as f:
         f.write(f"#!/bin/bash\necho '{dumps({'env': os.path.join(d, 'env', 'bin', 'python3'), 'file': os.path.join(d, 'lsp.py')})}'")
     os.system('chmod +x '+os.path.join(d, 'bin', 'wisp'))
     os.system('chmod +x '+os.path.join(d, 'bin', 'wisp-lsp'))
-    print(f'now on your bashrc, zshrc, etc: add this:\nexport PATH="{os.path.join(d, 'bin')}:$PATH"')
+    os.system(f'echo \'export PATH="{os.path.join(d, 'bin')}:$PATH"\' >> ~/.bashrc')
+    print(f'Restart your terminal and try running wisp. if it doesnt work add this to your ~/.bashrc:\nexport PATH="{os.path.join(d, 'bin')}:$PATH"')
 
 p = 'env/lib/'+os.listdir('env/lib')[0]+'/site-packages/stdio'
 if not os.path.exists(p):
