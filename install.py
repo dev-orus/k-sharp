@@ -15,7 +15,7 @@ else:
         f.write(f"""#!/bin/bash
 {os.path.join(d, 'env', 'bin', 'python3')} {os.path.join(d, 'wisp.py')} $1""")
     with open(os.path.join(d, 'bin', 'wisp-lsp'), 'w')as f:
-        f.write(f"#!/bin/bash\necho '{dumps({'env': os.path.join(d, 'env', 'bin', 'python3'), 'file': os.path.join(d, 'lsp.py')})}'")
+        f.write(f'#!/bin/bash\nnode {os.path.join(d, 'lsp', 'out', 'index.js')} "$@"')
     os.system('chmod +x '+os.path.join(d, 'bin', 'wisp'))
     os.system('chmod +x '+os.path.join(d, 'bin', 'wisp-lsp'))
     os.system(f'echo \'export PATH="{os.path.join(d, 'bin')}:$PATH"\' >> ~/.bashrc')

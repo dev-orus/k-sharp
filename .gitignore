@@ -5,3 +5,4 @@ compiler/__pycache__
 bin
 err.log
 lsp.log
+lsp/node_modules/
