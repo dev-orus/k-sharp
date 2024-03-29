@@ -49,7 +49,7 @@ def parse(code: str, syntax=SYNTAX):
                 ast.append(Ast(DIDENTIFIER, (pci(token['value']), pci(TOKENS[i+1]['value']))))
                 ignore = 1
             else:
-                ast.append(Ast(IDENTIFIER, token['value']))
+                ast.append(Ast(IDENTIFIER, pci(token['value'])))
 
         elif token['type'] == PTR_IDENTIFIER:
             hid = ctt(TOKENS, i+1)
@@ -77,7 +77,7 @@ def parse(code: str, syntax=SYNTAX):
                 ast.append(Ast(PTR_DIDENTIFIER, (pci(token['value'][0]), pci(TOKENS[i+1]['value']))))
                 ignore = 1
             else:
-                ast.append(Ast(PTR_IDENTIFIER, token['value']))
+                ast.append(Ast(PTR_IDENTIFIER, pci(token['value'])))
         
         elif token['type'] == KEYWORD:
             hid = ctt(TOKENS, i+1)
@@ -105,7 +105,7 @@ def parse(code: str, syntax=SYNTAX):
                     ast.append(Ast(USE_KEYWORD, pci(TOKENS[i+1]['value'])))
                     ignore = 1
             else:
-                ast.append(Ast(KEYWORD, token['value']))
+                ast.append(Ast(KEYWORD, pci(token['value'])))
 
         elif token['type'] == POWERWORD:
             hid = ctt(TOKENS, i+1)

@@ -12,7 +12,7 @@ def transpile(fname):
             else:
                 fy.write(compiler.transpile(f.read()))
 
-def listDir(c):
+def transDir(c):
     for i in listdir(c):
         x = path.join(c, i)
         if x.endswith('.ws'):
@@ -32,14 +32,14 @@ if __name__ == "__main__":
     if argv[1] == 'build':
         if not path.exists(conf['outDir']):
             mkdir(conf['outDir'])
-        listDir('.')
+        transDir('.')
         if name == 'nt':...
         else:
             system(f'.env/bin/python -m mypy {conf['outDir']}')
     elif argv[1] == 'run':
         if not path.exists(conf['outDir']):
             mkdir(conf['outDir'])
-        listDir('.')
+        transDir('.')
         if name == 'nt':...
         else:
             system(f'.env/bin/python -m mypy {conf['outDir']}')
