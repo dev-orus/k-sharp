@@ -90,7 +90,7 @@ def parse(code: str, syntax=SYNTAX):
                 if hid==IDENTIFIER and hid1==CURLY_BRACKETS:
                     ast.append(Ast(CLASS_DECL, (pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']))))
                     ignore = 2
-            elif token['value'] in ('if', 'elif', 'except'):
+            elif token['value'] in ('if', 'elif', 'except', 'while'):
                 if hid==ROUND_BRACKETS and hid1==CURLY_BRACKETS: 
                     ast.append(Ast(SCOPE_KEYWORD, (token['value'], pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']))))
                     ignore = 2

@@ -24,14 +24,13 @@ ANGLE_BRACKETS = 'ANGLE_BRACKETS'
 SOPERATOR = 'SOPERATOR'
 
 SYNTAX = {
+    r'^use|return|yield|raise|class|struct|if|elif|else|try|while|except|finally|\&\&|\|\||\!': KEYWORD,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\*': PTR_IDENTIFIER,
     r'^(?:\*\*|\*)?[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*': IDENTIFIER,
     r'\<([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\>': ANGLE_BRACKETS,
     r'^\n': NEWLINE,
     r'^\;': SEMICOLON,
     r'^\s': WHITESPACE,
-    # r'^\-\>': PTR_SCOPE,
-    r'^use|return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!': KEYWORD,
     r'^# *(include|del)': POWERWORD,
     r'^//(.+?)(?=\n|$)': COMMENT,
     r'\/\*(?:[^\/\*\*\/]|(?R))*\*\/': MCOMMENT,   
@@ -47,6 +46,7 @@ SYNTAX = {
 }
 
 SYNTAX2 = {
+    r'^use|return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!': KEYWORD,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\*': PTR_IDENTIFIER,
     r'^(?:\*\*|\*)?[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*': IDENTIFIER,
     r'\<([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\>': ANGLE_BRACKETS,
@@ -55,8 +55,6 @@ SYNTAX2 = {
     r'^\n': NEWLINE,
     r'^\;': SEMICOLON,
     r'^\s': WHITESPACE,
-    # r'^\-\>': PTR_SCOPE,
-    r'^use|return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!': KEYWORD,
     r'^# *(include|del)': POWERWORD,
     r'^//(.+?)(?=\n|$)': COMMENT,
     r'\/\*(?:[^\/\*\*\/]|(?R))*\*\/': MCOMMENT,   
