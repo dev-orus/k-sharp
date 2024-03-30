@@ -1,6 +1,5 @@
 import { join, dirname } from "path";
 const parentDir = dirname(dirname(__dirname));
-
 import {
   createConnection,
   TextDocuments,
@@ -24,9 +23,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { existsSync } from "fs";
 import { ChildProcessWithoutNullStreams, execSync, spawn } from "child_process";
 import { platform } from "os";
-import { dir } from "console";
 
-// TODO: Make a way to open a workspace folder and check if the currently open file has a string that starts with a directory on workspaceFodlers
 function readPY(): Promise<{ [key: string]: any }> {
   return new Promise((resolve) => {
     let stderrOutput = "";
@@ -45,9 +42,6 @@ const lspData: { env: string; file: string } = {
   env: join(parentDir, 'env', envType, 'python3'),
   file: join(parentDir, 'lsp.py')
 }
-// const lspData: { env: string; file: string } = JSON.parse(
-  // execSync(IS_WINDOWS ? "powershell wisp-lsp" : "bash wisp-lsp").toString()
-// );
 const connection = createConnection(ProposedFeatures.all);
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 var workspaceFolders: string[] = [];

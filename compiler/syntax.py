@@ -24,10 +24,10 @@ ANGLE_BRACKETS = 'ANGLE_BRACKETS'
 SOPERATOR = 'SOPERATOR'
 
 SYNTAX = {
-    r'^use|return|yield|raise|class|struct|if|elif|else|try|while|except|finally|\&\&|\|\||\!|in|for': KEYWORD,
-    r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\*': PTR_IDENTIFIER,
-    r'^(?:\*\*|\*)?[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*': IDENTIFIER,
-    r'\<([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\>': ANGLE_BRACKETS,
+    r'^\b(?:use|return|yield|raise|class|struct|if|elif|else|try|while|except|finally|\&\&|\|\||\!|in|for)\b': KEYWORD,
+    r'^((?:[._a-zA-Z]|->)(?:[a-zA-Z0-9_.\[\]]|::|->)*)\*': PTR_IDENTIFIER,
+    r'^(?:\*\*|\*)?(?:[._a-zA-Z]|->)(?:[a-zA-Z0-9_.\[\]]|::|->)*': IDENTIFIER,
+    r'\<((?:[._a-zA-Z]|->)(?:[a-zA-Z0-9_.\[\]]|::|->)*)\>': ANGLE_BRACKETS,
     r'^\n': NEWLINE,
     r'^\;': SEMICOLON,
     r'^\s': WHITESPACE,
@@ -46,10 +46,10 @@ SYNTAX = {
 }
 
 SYNTAX2 = {
-    r'^use|return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!|in': KEYWORD,
-    r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\*': PTR_IDENTIFIER,
-    r'^(?:\*\*|\*)?[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*': IDENTIFIER,
-    r'\<([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\>': ANGLE_BRACKETS,
+    r'^\b(?:use|return|yield|raise|class|struct|if|elif|else|try|while|except|finally|\&\&|\|\||\!|in|for)\b': KEYWORD,
+    r'^((?:[._a-zA-Z]|->)(?:[a-zA-Z0-9_.\[\]]|::|->)*)\*': PTR_IDENTIFIER,
+    r'^(?:\*\*|\*)?(?:[._a-zA-Z]|->)(?:[a-zA-Z0-9_.\[\]]|::|->)*': IDENTIFIER,
+    r'\<((?:[._a-zA-Z]|->)(?:[a-zA-Z0-9_.\[\]]|::|->)*)\>': ANGLE_BRACKETS,
     r'\,': SEP,
     r'\:': SEP1,
     r'^\n': NEWLINE,
