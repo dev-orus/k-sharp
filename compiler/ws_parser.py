@@ -49,7 +49,7 @@ def parse(code: str, syntax=SYNTAX):
                 ast.append(Ast(DIDENTIFIER, (pci(token['value']), pci(TOKENS[i+1]['value']))))
                 ignore = 1
             else:
-                ast.append(Ast(IDENTIFIER, pci(token['value'])))
+                ast.append(Ast(IDENTIFIER, pci(token['value'])+' '))
 
         elif token['type'] == PTR_IDENTIFIER:
             hid = ctt(TOKENS, i+1)
@@ -82,6 +82,8 @@ def parse(code: str, syntax=SYNTAX):
         elif token['type'] == KEYWORD:
             hid = ctt(TOKENS, i+1)
             hid1 = ctt(TOKENS, i+2)
+            if token['value'] == 'in':
+                ast.append(Ast(IDENTIFIER, pci(token['value'])+' '))
             if token['value'] == 'struct':
                 if hid==IDENTIFIER and hid1==CURLY_BRACKETS:
                     ast.append(Ast(STRUCT_DECL, (pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']))))
@@ -90,7 +92,7 @@ def parse(code: str, syntax=SYNTAX):
                 if hid==IDENTIFIER and hid1==CURLY_BRACKETS:
                     ast.append(Ast(CLASS_DECL, (pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']))))
                     ignore = 2
-            elif token['value'] in ('if', 'elif', 'except', 'while'):
+            elif token['value'] in ('if', 'elif', 'except', 'while', 'for'):
                 if hid==ROUND_BRACKETS and hid1==CURLY_BRACKETS: 
                     ast.append(Ast(SCOPE_KEYWORD, (token['value'], pci(TOKENS[i+1]['value']), pci(TOKENS[i+2]['value']))))
                     ignore = 2

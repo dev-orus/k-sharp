@@ -24,7 +24,7 @@ ANGLE_BRACKETS = 'ANGLE_BRACKETS'
 SOPERATOR = 'SOPERATOR'
 
 SYNTAX = {
-    r'^use|return|yield|raise|class|struct|if|elif|else|try|while|except|finally|\&\&|\|\||\!': KEYWORD,
+    r'^use|return|yield|raise|class|struct|if|elif|else|try|while|except|finally|\&\&|\|\||\!|in|for': KEYWORD,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\*': PTR_IDENTIFIER,
     r'^(?:\*\*|\*)?[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*': IDENTIFIER,
     r'\<([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\>': ANGLE_BRACKETS,
@@ -46,7 +46,7 @@ SYNTAX = {
 }
 
 SYNTAX2 = {
-    r'^use|return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!': KEYWORD,
+    r'^use|return|yield|raise|class|struct|if|elif|else|try|except|finally|\&\&|\|\||\!|in': KEYWORD,
     r'^([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\*': PTR_IDENTIFIER,
     r'^(?:\*\*|\*)?[_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*': IDENTIFIER,
     r'\<([_a-zA-Z](?:[a-zA-Z0-9_.\[\]]|::|->)*)\>': ANGLE_BRACKETS,
